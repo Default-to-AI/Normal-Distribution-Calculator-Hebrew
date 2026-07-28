@@ -32,12 +32,27 @@ npm run lint:colors # Color token validation
 
 ## Design & Styling
 
-- **Theme:** Dark (black `#000000` background), brass (`#D4A843`) + teal (`#4ECDC4`) accents, crimson (`#E03E3E`) for errors/rejections.
-- **Styling:** Tailwind CSS v4 (`@tailwindcss/vite`). Design tokens defined in `web/src/index.css` via CSS custom properties and `@theme` block.
-- **Fonts:** Assistant (RTL body), Inter (headings), Geist Mono (code/math), Gveret Levin (handwriting annotations).
-- **Motion:** Framer Motion (`motion` package) for page transitions, staggered entrances, and glow effects.
-- **Math rendering:** KaTeX via `react-katex`. Formula display uses `FormulaBlock` component.
-- **RTL:** Full Hebrew right-to-left interface. KaTeX blocks are force-isolated to LTR (critical — do not modify the `.katex` rules in `index.css`).
+- **Aesthetic direction:** Editorial Academic (v2.0, per `DESIGN.md`). Warm paper background, Indigo primary accent, sophisticated narrative-first typography. Goal is "high-end printed textbook", not "cockpit/dashboard".
+- **Theme tokens:** Tailwind CSS v4 (`@tailwindcss/vite`). Tokens are defined in `web/src/index.css` via CSS custom properties and the `@theme` block. The `@theme` block exposes tokens as Tailwind utilities (e.g., `bg-primary`); `:root` tokens are consumed via `var()` directly. Don't conflate the two.
+- **Background (paper):** `--color-background` (`#F9F9F6`) — warm off-white, reduces eye strain.
+- **Surface (cards):** `--color-surface` (`#FFFFFF`) — pure white for calculation blocks and interactive panels.
+- **Primary text (ink):** `--color-text-primary` (`#1A1A1A`) — deep ink.
+- **Accent (Indigo):** `--color-accent-primary` (`#4361EE`) — academic indigo for active states, primary buttons, H₁ references.
+- **Semantic / Charting:**
+  - Success / acceptance: `#10B981` (teal/green)
+  - Error / rejection: `#EF4444` (crimson)
+  - Warning / H₀: `#D4A843` (retained brass — semantic role only, not the dominant accent)
+- **Fonts:**
+  - Display/Hero (Hebrew): `Assistant` (Weights 600-800)
+  - Serif accents (Hebrew, sparing): `Frank Ruhl Libre`
+  - Body (Hebrew): `Assistant` (Weights 400-500)
+  - Math/formulas: **KaTeX** (always — see KaTeX formatting rule below)
+  - Data/tabular (only): `Geist Mono` (tabular-nums, not for equations)
+  - Handwriting: `Gveret Levin` — used by the `HandwrittenNote` component for human annotations.
+- **Motion:** `motion` (Framer Motion) for page transitions and staggered entrances. Intentional, choreographed; no bouncy/overly-playful animations.
+- **Spacing:** 8px base unit; spacious density; generous whitespace. Border radius: minimal — `--radius-sm` (4px), `--radius-md` (8px).
+- **Math rendering:** KaTeX via `react-katex`. Formula display uses the `FormulaBlock` component.
+- **RTL:** Full Hebrew right-to-left interface. KaTeX blocks are force-isolated to LTR (critical — do not modify the `.katex` rules in `index.css`). Use `String.raw` for all KaTeX strings and explicit LaTeX macros (`\sigma`, `\bar{x}`), never raw Unicode characters or non-raw JS strings.
 
 ## Conventions
 
@@ -51,8 +66,11 @@ npm run lint:colors # Color token validation
 ## Gotchas
 
 - **KaTeX RTL isolation is sacred.** The `!important` LTR rules in `index.css` are essential for correct math rendering in an RTL page. Never remove or weaken these.
+- **KaTeX strings MUST use `String.raw`.** JS string literals silently consume `\b`/`\m`/`\s` before KaTeX sees them (`\bar{x}` → `ar{x}`, `\mu` → `mu`, `\sigma` → `igma`). Use `` String.raw`\mu` `` and explicit LaTeX macros — never raw Unicode characters (`σ`, `μ`, `x̄`) inside `math={...}` props.
 - **HMR disabled in AI Studio:** `vite.config.ts` checks `DISABLE_HMR` env var — file watching is turned off during agent edits to prevent flickering.
-- **`npm run lint:colors`** validates color token usage against the DESIGN.md palette. Run it after adding new colored UI.
-- **The `@theme` block and `:root` tokens in `index.css` serve different purposes.** `@theme` exposes tokens as Tailwind utilities (e.g., `bg-primary`), while `:root` tokens are consumed via `var()` directly. Don't conflate the two.
+- **`npm run lint:colors`** validates color token usage against the DESIGN.md palette (no raw slate/gray/zinc, no magic numbers). Run it after adding new colored UI.
+- **The `@theme` block and `:root` tokens in `index.css` serve different purposes.** `@theme` exposes tokens as Tailwind utilities (e.g., `bg-primary`); `:root` tokens are consumed via `var()` directly. Don't conflate the two.
 - **No React Router.** Navigation is managed through `activePage` state in `App.tsx` and callbacks passed down. Add new pages by extending the `ActivePage` type and `SitePage` type.
-- **`stagger-in`, `curve-glow`, `pulse-brass`, etc.** are signature CSS classes defined in `index.css` — reuse these for consistent entrance animations and glow effects.
+- **Calculators MUST use the Global Templating Architecture** defined in `DESIGN.md` / `STRATEGY.md` / `CONTEXT.md`. Domain calculators handle only math + state; all rendering is delegated to `web/src/components/ui/` primitives (Heading/SectionHeader for titles, ChartWrapper for Recharts, ResultBlock/FormulaBlock/HandwrittenNote for results). Raw `<h1>`-`<h3>` in calculators is a DESIGN.md §3 violation.
+- **No glow/pulse/cockpit aesthetics.** The "stagger-in/curve-glow/pulse-brass" framing belongs to the previous (rejected) dark-brass system. Current system is Editorial Academic — restrained, paper-like, narrative-first.
+- **Page titles via `Heading`/`SectionHeader`** (with optional brass→teal accent bar), not raw `<h1>`/`<h2>`.

@@ -1,5 +1,14 @@
 # Statisti-Kal — The Academic Statistics Instrument
 
+> [!IMPORTANT]
+> **Superseded — 2026-07-28.** This document describes an earlier product direction
+> ("brass-and-teal cockpit", glow/pulse effects, gesture-driven UI). The current
+> authoritative design is **`DESIGN.md` v2.0 — Editorial Academic** (warm paper,
+> Indigo accent, narrative-first typography). All new work must follow `DESIGN.md`,
+> not this file. This file is retained for historical context only.
+
+---
+
 A Hebrew-first web instrument that turns abstract statistical concepts into interactive, step-by-step decision-making visualizations — so students don't just compute answers, they *see* the reasoning.
 
 - Walk students through hypothesis testing with a live bell curve that highlights rejection regions and acceptance zones as they adjust parameters, complete with p-value calculation and a plain-Hebrew verdict

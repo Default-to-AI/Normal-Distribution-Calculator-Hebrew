@@ -17,19 +17,28 @@ This file routes AI agents to the canonical context and strategy documents for t
 
 ## Quick Context (for immediate orientation)
 
-**Product**: Hebrew RTL-first academic statistics instrument for students. Precision aesthetic: bell curve is hero, brass accent (#D4A843) = H₀ reference, semantic color system.
+**Product**: Hebrew RTL-first academic statistics instrument for students. Editorial Academic aesthetic: warm paper background, Indigo primary accent, Assistant typography, KaTeX for all math.
 
 **Stack**: React 19 + TypeScript + Vite + Tailwind v4 + D3/Recharts + Motion + KaTeX
 
 **Critical State**:
-- `DESIGN.md` = comprehensive spec (Three-Layer Method compliant)
+- `DESIGN.md` = comprehensive spec (Three-Layer Method compliant, v2.0 Editorial Academic)
 - `web/tokens.json` / `web/tailwind.theme.json` / `web/src/index.css` = faithful token implementation
-- **Main large calculator surface**:
-  - `web/src/components/HypothesisTestingCalculator.tsx` — ~334KB
-- **Normal calculator refactor started**:
-  - `web/src/components/NormalDistributionCalculator.tsx` — ~56KB
-  - extracted support modules under `web/src/components/calc-ui/`, `charts/`, `tables/`, and `results/`
-- **Primitive component library exists** under `web/src/components/ui/`
+- **Calculators** (eight total — each is a top-level page component):
+  - `web/src/components/HypothesisTestingCalculator.tsx` — ~308KB (refactor target: <50KB)
+  - `web/src/components/NormalDistributionCalculator.tsx` — ~56KB (refactor in progress; support modules extracted under `web/src/components/calc-ui/`, `charts/`, `tables/`, `results/`)
+  - `web/src/components/LinearRegressionCalculator.tsx`
+  - `web/src/components/PointEstimationPage.tsx`
+  - `web/src/components/TestYourselfPage.tsx`
+  - `web/src/components/Exam2023Page.tsx`
+  - `web/src/components/FormulaSheet.tsx`
+  - `web/src/components/StatisticalHelperModal.tsx`
+- **Primitive component library** under `web/src/components/ui/` (~27 files):
+  Button, Card, Input, Modal, Heading, Accordion, Tooltip, PageLayout,
+  PageHeader, FormulaBlock, ResultBlock, HandwrittenNote, Table,
+  TableOfContents, Badge, InteractiveNormalGraph, MCQuestionCard,
+  CustomComponents, CyberneticBackground, navbar-menu, NewsletterForm,
+  PageTransition, ScrollToTopButton, SiteFooter, SiteHeader, plus tests and `index.ts`.
 
 **Current Phase**: Implementation (post-analysis). P0 remediation → primitive components → calculator rebuild → feature work.
 
@@ -39,10 +48,10 @@ This file routes AI agents to the canonical context and strategy documents for t
 
 | Agent Role | Entry Point | Then Read |
 |------------|-------------|-----------|
-| **strategist** | STRATEGY.md | CONTEXT.md, DESIGN.md, design-system-audit.md, ux-evaluation.md |
-| **engineer** | STRATEGY.md | CONTEXT.md, DESIGN.md, design-system-audit.md (P0/P1 sections), web/tokens.json, web/src/index.css |
-| **reviewer** | STRATEGY.md | design-system-audit.md, ux-evaluation.md, CONTEXT.md |
-| **vault** | STRATEGY.md | Vault context: Hebrew RTL, brass accent, Assistant/Space Grotesk/JetBrains Mono, academic statistics domain |
+| **strategist** | STRATEGY.md | CONTEXT.md, DESIGN.md |
+| **engineer** | STRATEGY.md | CONTEXT.md, DESIGN.md, web/tokens.json, web/src/index.css |
+| **reviewer** | STRATEGY.md | CONTEXT.md, DESIGN.md |
+| **vault** | STRATEGY.md | Vault context: Hebrew RTL, Indigo accent, Assistant/Space Grotesk/JetBrains Mono, academic statistics domain |
 
 ---
 
@@ -61,30 +70,36 @@ Agents do not automatically possess knowledge of local workspace skills. Therefo
 C:/Users/Tiger/Agents/Projects/statisti-kal/
 ├── STRATEGY.md                    ← READ FIRST (product anchor)
 ├── CONTEXT.md                     ← READ SECOND (architecture + issues)
-├── DESIGN.md                      ← Design system spec (authoritative)
-├── design-system-audit.md         ← Spec vs implementation gaps (P0/P1/P2)
-├── ux-evaluation.md               ← Steve Jobs binary verdicts + cut/keep lists
+├── DESIGN.md                      ← Design system spec (authoritative, v2.0 Editorial Academic)
+├── IDEA.md                        ← Original product vision (superseded by DESIGN.md v2.0)
+├── knowledge.md                   ← Agent-facing project knowledge (architecture, conventions, gotchas)
 ├── web/
 │   ├── tokens.json                    ← W3C DTCG token export
 │   ├── tailwind.theme.json            ← Tailwind v3 theme export
 │   ├── src/index.css                  ← @theme + CSS custom properties (source of truth)
+│   ├── src/App.tsx                    ← Routing hub (in-app `activePage` state, no React Router)
+│   ├── src/main.tsx                   ← React entry
+│   ├── src/lib/statistics/            ← Pure functions: hypothesis testing, math helpers, power calc
 │   ├── src/components/
-│   │   ├── HypothesisTestingCalculator.tsx   (~334KB — NEEDS REFACTOR)
-│   │   ├── NormalDistributionCalculator.tsx  (~56KB — refactor started)
-│   │   ├── calc-ui/                          (normal calculator controls/types)
-│   │   ├── charts/                           (NormalChart)
-│   │   ├── tables/                           (ZTable + t critical values)
-│   │   ├── results/                          (FormattedStep)
+│   │   ├── HypothesisTestingCalculator.tsx   (~308KB — refactor target: <50KB)
+│   │   ├── NormalDistributionCalculator.tsx  (~56KB — refactor in progress)
+│   │   ├── LinearRegressionCalculator.tsx
+│   │   ├── PointEstimationPage.tsx
+│   │   ├── TestYourselfPage.tsx
+│   │   ├── Exam2023Page.tsx
 │   │   ├── FormulaSheet.tsx
 │   │   ├── StatisticalHelperModal.tsx
-│   │   └── ui/
-│   │       ├── Card.tsx
-│   │       ├── PageLayout.tsx
-│   │       ├── CustomComponents.tsx          (InputGroup, Disclosure, etc.)
-│   │       └── index.ts
+│   │   ├── LandingPage.tsx
+│   │   ├── SiteHeader.tsx / SiteFooter.tsx
+│   │   ├── calc-ui/                          (parameter inputs, mode switches, formula tokens)
+│   │   ├── charts/                           (NormalChart, HypothesisChart, ChartPrimitives)
+│   │   ├── tables/                           (ZTable + t critical values)
+│   │   ├── results/                          (FormattedStep, conclusion blocks)
+│   │   ├── tours/                            (react-joyride step definitions)
+│   │   └── ui/                               (~27 primitive components — Button, Card, Input, Modal, Heading, Accordion, Tooltip, PageLayout, PageHeader, FormulaBlock, ResultBlock, HandwrittenNote, Table, TableOfContents, Badge, InteractiveNormalGraph, MCQuestionCard, CustomComponents, CyberneticBackground, navbar-menu, NewsletterForm, PageTransition, ScrollToTopButton, SiteFooter, SiteHeader, plus tests and `index.ts`)
 │   ├── src/hooks/useLocalStorageState.ts
-│   ├── src/App.tsx
-│   └── src/main.tsx
+│   ├── src/test-setup.ts
+│   └── scripts/                               (build-og-image.mjs, lint-colors.mjs)
 ```
 
 ---
@@ -94,12 +109,11 @@ C:/Users/Tiger/Agents/Projects/statisti-kal/
 This project follows the **Compound Engineering (CE) workflow**:
 
 1. **ce-strategy** (Read `.agents/skills/ce-strategy/SKILL.md`) → STRATEGY.md (DONE)
-2. **ce-brainstorm** (Read `.agents/skills/ce-brainstorm/SKILL.md`) → requirements.md (from existing brainstorm)
-3. **frontend-design audit** (Read `.agents/skills/frontend-design/SKILL.md`) → design-system-audit.md (DONE)
-4. **ce-plan** (Read `.agents/skills/ce-plan/SKILL.md`) → confidence-gated implementation plan with verification gates
-5. **ce-work** (Read `.agents/skills/ce-work/SKILL.md`) → execute in worktrees with CI gates
-6. **ce-code-review** (Read `.agents/skills/ce-code-review/SKILL.md`) → 12-persona review on major refactor
-7. **ce-compound** (Read `.agents/skills/ce-compound/SKILL.md`) → extract lessons into reusable skills/patterns
+2. **ce-brainstorm** (Read `.agents/skills/ce-brainstorm/SKILL.md`) → brainstorm notes (kept in skill folder)
+3. **ce-plan** (Read `.agents/skills/ce-plan/SKILL.md`) → confidence-gated implementation plan with verification gates
+4. **ce-work** (Read `.agents/skills/ce-work/SKILL.md`) → execute in worktrees with CI gates
+5. **ce-code-review** (Read `.agents/skills/ce-code-review/SKILL.md`) → 12-persona review on major refactor
+6. **ce-compound** (Read `.agents/skills/ce-compound/SKILL.md`) → extract lessons into reusable skills/patterns
 
 **Do not skip steps**. STRATEGY.md blocks all downstream work until complete.
 
